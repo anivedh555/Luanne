@@ -1,4 +1,4 @@
-<link href="http://github.com/yrgoldteeth/darkdowncss/raw/master/darkdown.css" rel="stylesheet"></link>
+
 ![](assets/images/banner.png)
 
  
