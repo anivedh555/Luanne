@@ -126,6 +126,7 @@ It was a easy machine so I thought this may be the password of root but the mach
 
 ![](assets/images/LuanneSudo.png)
 
-But I searched for the alternative of sudo in openBSd and got to know that we can use doas. And it worked...
-![](assets/images/LuanneRoot.png)
+But I searched for the alternative of sudo in openBSD and got to know that we can use doas. And it worked...
+
+THE END.
 
